@@ -14,126 +14,71 @@
             background-color: #050505;
             color: #f3f4f6;
             overflow-x: hidden;
-            transition: background-color 1s ease;
         }
 
-        /* Динамический атмосферный фон, который будет меняться через JS */
+        /* Динамический атмосферный фон */
         #dynamic-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background-image: radial-gradient(circle at 50% 0%, #3a1a25 0%, #050505 60%);
+            background-image: radial-gradient(circle at 50% 0%, #3a1a25 0%, #050505 70%);
             z-index: -2;
-            transition: background-image 1.5s ease, opacity 1.5s ease;
+            transition: background-image 1.5s ease-in-out;
         }
 
         .glass-card {
             background: rgba(255, 255, 255, 0.02);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
             border-radius: 1.5rem;
-            transition: all 0.5s ease;
         }
 
-        /* Карточки скролла */
-        .scroll-step {
-            opacity: 0.3;
-            transform: scale(0.95);
-            transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-
-        .scroll-step.active {
-            opacity: 1;
-            transform: scale(1);
-            border-color: rgba(216, 124, 142, 0.3);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 40px rgba(169, 42, 63, 0.1);
-        }
-
-        /* Единый доминирующий мокап */
-        .device-mockup {
+        /* Стиль чистого цифрового интерфейса (без рамки телефона) */
+        .digital-slab {
             position: relative;
             width: 100%;
-            max-width: 320px;
+            max-width: 340px;
             aspect-ratio: 9 / 19.5;
-            background-color: #000;
-            border-radius: 2.5rem;
-            overflow: hidden;
-            border: 2px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.9), 0 0 50px rgba(114, 30, 48, 0.3);
-            margin: 0 auto;
-            transition: box-shadow 1.5s ease;
-        }
-
-        /* Контейнер для экранов с компенсацией челки */
-        .screen-container {
-            position: relative;
-            width: 100%;
-            height: calc(100% + 55px);
-            margin-top: -55px;
-        }
-
-        .device-screen-image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            border-radius: 2rem;
             object-fit: cover;
             object-position: top;
-            transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), transform 2s ease-out;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.9), 0 0 50px rgba(169, 42, 63, 0.15);
+            transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.6s ease;
+            z-index: 10;
+            margin: 0 auto;
+        }
+
+        .digital-slab:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 1), 0 0 60px rgba(169, 42, 63, 0.25);
+        }
+
+        /* Анимации появления при скролле */
+        .reveal-up {
             opacity: 0;
-            transform: scale(1.05);
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        .device-screen-image.active {
+        .reveal-up.active {
             opacity: 1;
-            transform: scale(1);
-        }
-
-        /* Бесшовная стилизация чёлки */
-        .device-mockup::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 130px;
-            height: 24px;
-            background-color: #050505;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-top: none;
-            border-bottom-left-radius: 12px;
-            border-bottom-right-radius: 12px;
-            z-index: 20;
+            transform: translateY(0);
         }
 
         .glow-effect {
             position: absolute;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(169,42,63,0.15) 0%, rgba(0,0,0,0) 70%);
+            width: 500px;
+            height: 500px;
             border-radius: 50%;
             z-index: -1;
-            transition: background 1.5s ease;
+            filter: blur(60px);
+            opacity: 0.4;
         }
-
-        /* ВОЗДУШНЫЕ АНИМАЦИИ */
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .animate-fade-up {
-            animation: fadeUp 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-            opacity: 0;
-        }
-
-        .delay-100 { animation-delay: 0.1s; }
-        .delay-300 { animation-delay: 0.3s; }
     </style>
 </head>
 <body class="antialiased selection:bg-[#a92a3f] selection:text-white">
@@ -142,87 +87,78 @@
     <div id="dynamic-bg"></div>
 
     <!-- Header / Hero -->
-    <header class="container mx-auto px-6 pt-32 pb-20 text-center max-w-4xl relative animate-fade-up">
+    <header class="container mx-auto px-6 pt-32 pb-32 text-center max-w-4xl relative reveal-up active">
+        <div class="glow-effect top-0 left-1/2 -translate-x-1/2 bg-gradient-to-b from-[#a92a3f]/20 to-transparent"></div>
         <h1 class="text-6xl md:text-8xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-gray-100 to-[#e5aeb7]">
             Amen
         </h1>
         <p class="text-xl md:text-2xl text-gray-400 font-light mb-12 max-w-2xl mx-auto leading-relaxed">
             Цифровое пространство для твоей духовной дисциплины.
         </p>
+        <div class="animate-bounce mt-16 text-gray-500 opacity-50">
+            <i data-lucide="arrow-down" class="w-6 h-6 mx-auto"></i>
+        </div>
     </header>
 
-    <!-- Секция Sticky Scroll -->
-    <section class="container mx-auto px-6 max-w-7xl relative pb-32">
-        <div class="flex flex-col lg:flex-row items-start gap-12 lg:gap-24">
-            
-            <!-- Левая колонка: Текстовые блоки (скроллятся) -->
-            <div class="w-full lg:w-1/2 relative z-10 pt-10 lg:pt-32 pb-32">
-                <!-- Огромные отступы создают пространство для скролла -->
-                <div class="space-y-[30vh] lg:space-y-[60vh]">
-                    
-                    <!-- Шаг 1: Фокус -->
-                    <div id="step-focus" class="scroll-step active glass-card p-10 md:p-12 relative overflow-hidden">
-                        <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-[#e5aeb7] to-transparent opacity-50"></div>
-                        <div class="text-[#d87c8e] mb-6"><i data-lucide="waves" class="w-10 h-10"></i></div>
-                        <h3 class="text-3xl font-semibold mb-4 text-white/95 tracking-tight">Поток</h3>
-                        <p class="text-gray-400 text-lg leading-relaxed font-light">
-                            Ежедневный фокус из Писания для настройки сердца и лента «Единство», где мы поддерживаем молитвы других. Никакого визуального шума, только суть.
-                        </p>
-                    </div>
-
-                    <!-- Шаг 2: Путеводитель -->
-                    <div id="step-guide" class="scroll-step glass-card p-10 md:p-12 relative overflow-hidden">
-                        <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-[#a78bfa] to-transparent opacity-50"></div>
-                        <div class="text-[#a78bfa] mb-6"><i data-lucide="book-open" class="w-10 h-10"></i></div>
-                        <h3 class="text-3xl font-semibold mb-4 text-white/95 tracking-tight">Путеводитель</h3>
-                        <p class="text-gray-400 text-lg leading-relaxed font-light">
-                            Удобная навигация по всем разделам: от твоей тайной комнаты (дневника) до сада веры. Всё под рукой, в одном свайпе от главного экрана.
-                        </p>
-                    </div>
-
-                    <!-- Шаг 3: Плеер -->
-                    <div id="step-player" class="scroll-step glass-card p-10 md:p-12 relative overflow-hidden">
-                        <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-[#60a5fa] to-transparent opacity-50"></div>
-                        <div class="text-[#60a5fa] mb-6"><i data-lucide="headphones" class="w-10 h-10"></i></div>
-                        <h3 class="text-3xl font-semibold mb-4 text-white/95 tracking-tight">Атмосфера</h3>
-                        <p class="text-gray-400 text-lg leading-relaxed font-light">
-                            Свободно меняй визуальную тему (от темного космоса до светлого утра) и включай фоновую музыку, чтобы успокоить мысли перед молитвой.
-                        </p>
-                    </div>
-
+    <!-- Каскадная Инфографика -->
+    <section class="container mx-auto px-6 max-w-6xl relative pb-32 space-y-32 lg:space-y-48">
+        
+        <!-- Шаг 1: Фокус (Текст слева, Скриншот справа) -->
+        <div id="section-focus" class="feature-section flex flex-col lg:flex-row items-center gap-12 lg:gap-24 reveal-up">
+            <div class="w-full lg:w-1/2 space-y-6 text-center lg:text-left order-2 lg:order-1">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#a92a3f]/10 text-[#d87c8e] mb-2 border border-[#a92a3f]/20">
+                    <i data-lucide="waves" class="w-8 h-8"></i>
                 </div>
+                <h3 class="text-4xl font-semibold text-white/95 tracking-tight">Поток</h3>
+                <p class="text-gray-400 text-lg md:text-xl leading-relaxed font-light">
+                    Ежедневный фокус из Писания для настройки сердца и лента «Единство», где мы поддерживаем молитвы других. Никакого визуального шума, только суть.
+                </p>
             </div>
-
-            <!-- Правая колонка: Залипающий телефон (Sticky) -->
-            <div class="w-full lg:w-1/2 sticky top-24 lg:top-32 h-[80vh] flex justify-center items-center z-0 animate-fade-up delay-300 hidden lg:flex">
-                <div id="main-glow" class="glow-effect top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-80"></div>
-                
-                <div id="mockup-frame" class="device-mockup transform transition-transform duration-1000">
-                    <div class="screen-container">
-                        <img id="screen-focus" src="focus.jpg" alt="Поток" class="device-screen-image active" onerror="this.src='https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1000&auto=format&fit=crop'">
-                        <img id="screen-guide" src="guide.jpg" alt="Путеводитель" class="device-screen-image" onerror="this.src='https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?q=80&w=1000&auto=format&fit=crop'">
-                        <!-- ВНИМАНИЕ: СЮДА НУЖЕН ЧИСТЫЙ СКРИН ПЛЕЕРА БЕЗ КЛАВИАТУРЫ -->
-                        <img id="screen-player" src="player.jpg" alt="Плеер" class="device-screen-image" onerror="this.src='https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?q=80&w=1000&auto=format&fit=crop'">
-                    </div>
-                </div>
+            <div class="w-full lg:w-1/2 relative order-1 lg:order-2">
+                <div class="glow-effect top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#a92a3f]/20"></div>
+                <img src="focus.jpg" alt="Поток" class="digital-slab shadow-[#a92a3f]/20" onerror="this.src='https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1000&auto=format&fit=crop'">
             </div>
-            
-            <!-- Мобильная версия телефона (показывается только на мобилках) -->
-            <div class="w-full h-[60vh] flex justify-center items-center z-0 lg:hidden sticky top-20 mb-32 -mt-10">
-                 <div class="device-mockup transform scale-90">
-                    <div class="screen-container">
-                        <img id="mobile-screen-focus" src="focus.jpg" class="device-screen-image active" onerror="this.src='https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1000&auto=format&fit=crop'">
-                        <img id="mobile-screen-guide" src="guide.jpg" class="device-screen-image" onerror="this.src='https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?q=80&w=1000&auto=format&fit=crop'">
-                        <img id="mobile-screen-player" src="player.jpg" class="device-screen-image" onerror="this.src='https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?q=80&w=1000&auto=format&fit=crop'">
-                    </div>
-                </div>
-            </div>
-
         </div>
+
+        <!-- Шаг 2: Путеводитель (Скриншот слева, Текст справа) -->
+        <div id="section-guide" class="feature-section flex flex-col lg:flex-row items-center gap-12 lg:gap-24 reveal-up">
+            <div class="w-full lg:w-1/2 relative order-1">
+                <div class="glow-effect top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#8b5cf6]/20"></div>
+                <img src="guide.jpg" alt="Путеводитель" class="digital-slab shadow-[#8b5cf6]/20" onerror="this.src='https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?q=80&w=1000&auto=format&fit=crop'">
+            </div>
+            <div class="w-full lg:w-1/2 space-y-6 text-center lg:text-left order-2">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#8b5cf6]/10 text-[#a78bfa] mb-2 border border-[#8b5cf6]/20">
+                    <i data-lucide="book-open" class="w-8 h-8"></i>
+                </div>
+                <h3 class="text-4xl font-semibold text-white/95 tracking-tight">Путеводитель</h3>
+                <p class="text-gray-400 text-lg md:text-xl leading-relaxed font-light">
+                    Удобная навигация по всем разделам: от твоей тайной комнаты (дневника) до сада веры. Всё под рукой, в одном свайпе от главного экрана.
+                </p>
+            </div>
+        </div>
+
+        <!-- Шаг 3: Плеер (Текст слева, Скриншот справа) -->
+        <div id="section-player" class="feature-section flex flex-col lg:flex-row items-center gap-12 lg:gap-24 reveal-up">
+            <div class="w-full lg:w-1/2 space-y-6 text-center lg:text-left order-2 lg:order-1">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#3b82f6]/10 text-[#60a5fa] mb-2 border border-[#3b82f6]/20">
+                    <i data-lucide="headphones" class="w-8 h-8"></i>
+                </div>
+                <h3 class="text-4xl font-semibold text-white/95 tracking-tight">Атмосфера и Звук</h3>
+                <p class="text-gray-400 text-lg md:text-xl leading-relaxed font-light">
+                    Свободно меняй визуальную тему (от темного космоса до светлого утра) и включай фоновую музыку, чтобы успокоить мысли перед молитвой.
+                </p>
+            </div>
+            <div class="w-full lg:w-1/2 relative order-1 lg:order-2">
+                <div class="glow-effect top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#3b82f6]/20"></div>
+                <!-- ВНИМАНИЕ: СЮДА НУЖЕН ЧИСТЫЙ СКРИН ПЛЕЕРА БЕЗ КЛАВИАТУРЫ -->
+                <img src="player.jpg" alt="Плеер" class="digital-slab shadow-[#3b82f6]/20" onerror="this.src='https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?q=80&w=1000&auto=format&fit=crop'">
+            </div>
+        </div>
+
     </section>
 
     <!-- Установка -->
-    <section class="container mx-auto px-6 py-32 max-w-5xl relative z-10 bg-[#050505]/80 backdrop-blur-xl rounded-t-[4rem] mt-10 border-t border-white/5">
+    <section class="container mx-auto px-6 py-32 max-w-5xl relative z-10 bg-[#050505]/60 backdrop-blur-2xl rounded-t-[4rem] border-t border-white/5 reveal-up">
         <div class="text-center mb-16 relative">
             <h2 class="text-3xl font-bold mb-4 text-white/90">Установка приложения</h2>
             <p class="text-gray-400 font-light">Amen работает как современное PWA. Оно не требует скачивания из магазинов.</p>
@@ -275,73 +211,51 @@
         </div>
 
         <div class="mt-20 text-center">
-            <a href="https://amen-final.vercel.app/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-3 px-8 py-4 bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-2xl font-medium transition-all duration-500 hover:shadow-[0_0_40px_rgba(255,255,255,0.1)]">
+            <a href="https://amen-final.vercel.app/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-3 px-8 py-4 bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-2xl font-medium transition-all duration-500 hover:shadow-[0_0_40px_rgba(255,255,255,0.1)] hover:-translate-y-1">
                 <span>Перейти в Amen</span>
                 <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </a>
         </div>
     </section>
 
-    <!-- JS Logic for Scroll Jacking -->
     <script>
         lucide.createIcons();
 
-        // Цветовые темы для каждого шага
+        // Анимация появления элементов при скролле и смена фона
         const themes = {
-            'focus': {
-                bg: 'radial-gradient(circle at 50% 0%, #3a1a25 0%, #050505 60%)',
-                glow: 'radial-gradient(circle, rgba(169,42,63,0.15) 0%, rgba(0,0,0,0) 70%)',
-                shadow: '0 40px 80px -20px rgba(0, 0, 0, 0.9), 0 0 50px rgba(114, 30, 48, 0.3)'
-            },
-            'guide': {
-                bg: 'radial-gradient(circle at 50% 0%, #2b1d38 0%, #050505 60%)',
-                glow: 'radial-gradient(circle, rgba(139,92,246,0.12) 0%, rgba(0,0,0,0) 70%)',
-                shadow: '0 40px 80px -20px rgba(0, 0, 0, 0.9), 0 0 50px rgba(109, 40, 217, 0.2)'
-            },
-            'player': {
-                bg: 'radial-gradient(circle at 50% 0%, #162a3f 0%, #050505 60%)',
-                glow: 'radial-gradient(circle, rgba(59,130,246,0.12) 0%, rgba(0,0,0,0) 70%)',
-                shadow: '0 40px 80px -20px rgba(0, 0, 0, 0.9), 0 0 50px rgba(37, 99, 235, 0.2)'
-            }
+            'section-focus': 'radial-gradient(circle at 50% 0%, #3a1a25 0%, #050505 70%)',
+            'section-guide': 'radial-gradient(circle at 50% 0%, #2b1d38 0%, #050505 70%)',
+            'section-player': 'radial-gradient(circle at 50% 0%, #162a3f 0%, #050505 70%)'
         };
 
-        const steps = document.querySelectorAll('.scroll-step');
         const dynamicBg = document.getElementById('dynamic-bg');
-        const mainGlow = document.getElementById('main-glow');
-        const mockupFrame = document.getElementById('mockup-frame');
+        const revealElements = document.querySelectorAll('.reveal-up');
+        const sections = document.querySelectorAll('.feature-section');
 
-        // Intersection Observer для отслеживания скролла
         const observerOptions = {
             root: null,
-            rootMargin: '-40% 0px -40% 0px', // Триггер срабатывает, когда блок проходит центр экрана
-            threshold: 0
+            rootMargin: '0px 0px -20% 0px',
+            threshold: 0.1
         };
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
+                // Анимация появления
                 if (entry.isIntersecting) {
-                    const targetId = entry.target.id.replace('step-', '');
-                    
-                    // 1. Обновляем активный текстовый блок
-                    steps.forEach(step => step.classList.remove('active'));
                     entry.target.classList.add('active');
-
-                    // 2. Меняем картинки в телефонах (Desktop + Mobile)
-                    document.querySelectorAll('.device-screen-image').forEach(img => img.classList.remove('active'));
-                    document.getElementById('screen-' + targetId)?.classList.add('active');
-                    document.getElementById('mobile-screen-' + targetId)?.classList.add('active');
-
-                    // 3. Меняем атмосферу (фон и свечение)
-                    if(themes[targetId]) {
-                        dynamicBg.style.backgroundImage = themes[targetId].bg;
-                        if(mainGlow) mainGlow.style.background = themes[targetId].glow;
-                        if(mockupFrame) mockupFrame.style.boxShadow = themes[targetId].shadow;
+                }
+                
+                // Смена фона, если это секция со скриншотом
+                if (entry.isIntersecting && entry.target.classList.contains('feature-section')) {
+                    const sectionId = entry.target.id;
+                    if(themes[sectionId]) {
+                        dynamicBg.style.backgroundImage = themes[sectionId];
                     }
                 }
             });
         }, observerOptions);
 
-        steps.forEach(step => observer.observe(step));
+        revealElements.forEach(el => observer.observe(el));
     </script>
 </body>
 </html>
